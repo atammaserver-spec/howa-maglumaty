@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="tk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hawa Ýagdaýy</title>
+    <style>
+        body { font-family: sans-serif; background: #222; color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: #333; padding: 20px; border-radius: 10px; text-align: center; width: 280px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        button { padding: 10px 15px; background: #0088cc; color: #fff; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Aşgabat Hawa Ýagdaýy</h2>
+    <div id="result">Ýüklenýär...</div>
+    <button onclick="getWeather()">Täzele</button>
+</div>
+
+<script>
+async function getWeather() {
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = 'Ýüklenýär...';
+
+    try {
+        // Aşgabat koordinatlary (Latitude: 37.95, Longitude: 58.38)
+        const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=37.95&longitude=58.38&current_weather=true');
+        const data = await response.json();
+
+        if (data.current_weather) {
+            const temp = data.current_weather.temperature;
+            const wind = data.current_weather.windspeed;
+            resultDiv.innerHTML = `
+                <h1 style="font-size: 2.5em; margin: 10px 0;">${temp} °C</h1>
+                <p><b>Şemalyň tizligi:</b> ${wind} km/s</p>
+            `;
+        } else {
+            resultDiv.innerHTML = 'Maglumat tapylmady.';
+        }
+    } catch (error) {
+        resultDiv.innerHTML = 'Birleşme ýalňyşlygy (Internetinizi barlaň).';
+    }
+}
+
+// Sahypa açılanda awtomatiki işleýär
+getWeather();
+</script>
+
+</body>
+</html>
